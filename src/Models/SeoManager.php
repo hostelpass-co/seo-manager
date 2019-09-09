@@ -93,7 +93,7 @@ class SeoManager extends Model
             return $this->translation->keywords;
         }
 
-        return json_decode($value);
+        return json_decode($value ?? '');
     }
 
     /**
@@ -163,7 +163,7 @@ class SeoManager extends Model
             return $this->translation->title_dynamic;
         }
 
-        return json_decode($value);
+        return json_decode($value ?? '');
     }
 
     /**
@@ -177,6 +177,6 @@ class SeoManager extends Model
             return $this->translation->og_data;
         }
 
-        return json_decode($value, true);
+        return json_decode($value ?? '', true);
     }
 }
