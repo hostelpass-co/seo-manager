@@ -32,7 +32,7 @@
                             </table>
                             <div v-show="routes.length === 0" class="no-routes">
                                 <!-- Image -->
-                                <img src="vendor/lionix/img/scale.svg" alt="..." class="img-fluid"
+                                <img src="vendor/dkrasov/img/scale.svg" alt="..." class="img-fluid"
                                      style="max-width: 182px;">
                                 <!-- Title -->
                                 <h1>

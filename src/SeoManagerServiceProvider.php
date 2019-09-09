@@ -1,11 +1,17 @@
 <?php
+declare(strict_types = 1);
 
-namespace Lionix\SeoManager;
+namespace Krasov\SeoManager;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Lionix\SeoManager\Commands\GenerateSeoManagerData;
+use Krasov\SeoManager\Commands\GenerateSeoManagerData;
 
+/**
+ * Class SeoManagerServiceProvider
+ *
+ * @package Krasov\SeoManager
+ */
 class SeoManagerServiceProvider extends ServiceProvider
 {
     /**
@@ -13,7 +19,7 @@ class SeoManagerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/routes/seo-manager.php');
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
@@ -24,7 +30,7 @@ class SeoManagerServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/assets' =>  public_path('vendor/lionix'),
+            __DIR__ . '/assets' =>  public_path('vendor/dkrasov'),
         ], 'assets');
 
         $this->commands([
@@ -33,10 +39,10 @@ class SeoManagerServiceProvider extends ServiceProvider
 
         $this->registerHelpers();
         $router = $this->app['router'];
-        $router->pushMiddlewareToGroup('web', \Lionix\SeoManager\Middleware\ClearViewCache::class);
+        $router->pushMiddlewareToGroup('web', \Krasov\SeoManager\Middleware\ClearViewCache::class);
 
         if (config('seo-manager.shared_meta_data')) {
-            $router->pushMiddlewareToGroup('web', \Lionix\SeoManager\Middleware\SeoManager::class);
+            $router->pushMiddlewareToGroup('web', \Krasov\SeoManager\Middleware\SeoManager::class);
         }
 
         // Blade Directives
@@ -48,23 +54,27 @@ class SeoManagerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__ . '/config/seo-manager.php', 'seo-manager'
         );
-        $this->app->bind('seomanager', function () {
+
+        $this->app->bind('seomanager', static function (): SeoManager {
             return new SeoManager();
         });
+
         $this->app->alias('seomanager', SeoManager::class);
     }
 
     /**
      * Register helpers file
+     *
+     * @return void
      */
-    public function registerHelpers()
+    public function registerHelpers(): void
     {
-        // Load the helpers
+        // Load helpers
         if (file_exists($file = __DIR__ . '/helpers/helpers.php')) {
             require $file;
         }
@@ -72,14 +82,16 @@ class SeoManagerServiceProvider extends ServiceProvider
 
     /**
      * Register Blade Directives
+     *
+     * @return void
      */
-    public function registerBladeDirectives()
+    public function registerBladeDirectives(): void
     {
-
-        Blade::directive('meta', function ($expression) {
+        Blade::directive('meta', static function ($expression): string {
             $meta = '';
             $expression = trim($expression, '\"\'');
             $metaData = metaData($expression);
+
             if (is_array($metaData)) {
                 foreach ($metaData as $key => $og) {
                     $meta .= "<meta property='{$key}' content='{$og}'/>";
@@ -87,24 +99,31 @@ class SeoManagerServiceProvider extends ServiceProvider
             } else {
                 $meta .= "<meta property='{$expression}' content='{$metaData}'/>";
             }
+
             return $meta;
         });
-        Blade::directive('keywords', function () {
+
+        Blade::directive('keywords', static function (): string {
             return "<meta property='keywords' content='" . metaKeywords() . "'/>";
         });
-        Blade::directive('url', function () {
+
+        Blade::directive('url', static function (): string {
             return "<meta property='url' content='" . metaUrl() . "'/>";
         });
-        Blade::directive('author', function () {
+
+        Blade::directive('author', static function (): string {
             return "<meta property='author' content='" . metaAuthor() . "'/>";
         });
-        Blade::directive('description', function () {
+
+        Blade::directive('description', static function (): string {
             return "<meta property='description' content='" . metaDescription() . "'/>";
         });
-        Blade::directive('title', function () {
+
+        Blade::directive('title', static function (): string {
             return "<meta property='title' content='" . metaTitle() . "'/>";
         });
-        Blade::directive('openGraph', function ($expression) {
+
+        Blade::directive('openGraph', static function ($expression): string {
             $expression = trim($expression, '\"\'');
             $meta = '';
             $metaOpenGraph = metaOpenGraph($expression);
@@ -117,9 +136,9 @@ class SeoManagerServiceProvider extends ServiceProvider
             }
             return $meta;
         });
-        Blade::directive('titleDynamic', function () {
+
+        Blade::directive('titleDynamic', static function () {
             return metaTitleDynamic();
         });
     }
-
 }

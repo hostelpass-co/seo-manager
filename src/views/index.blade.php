@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <!-- Libs CSS -->
-    <link rel="stylesheet" href="{{ asset('vendor/lionix/fonts/feather/feather.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/dkrasov/fonts/feather/feather.min.css') }}">
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="{{ asset('vendor/lionix/css/theme.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/dkrasov/css/theme.min.css') }}">
 
     <script>
         let API_URL = '{{ route('seo-manager.home') }}';
@@ -28,12 +28,11 @@
 <!-- JAVASCRIPT
 ================================================== -->
 <!-- Libs JS -->
-<script src="{{ asset('vendor/lionix/libs/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/lionix/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('vendor/dkrasov/libs/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('vendor/dkrasov/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
 <!-- Theme JS -->
-{{--<script src="{{ asset('vendor/lionix/js/theme.min.js') }}"></script>--}}
-<script src="{{ asset('vendor/lionix/js/seo-manager.app.js') }}"></script>
+<script src="{{ asset('vendor/dkrasov/js/seo-manager.app.js') }}"></script>
 </body>
 
 </html>

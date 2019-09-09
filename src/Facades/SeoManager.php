@@ -1,19 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sergeykarakhanyan
- * Date: 12/23/18
- * Time: 13:54
- */
+declare(strict_types = 1);
 
-namespace Lionix\SeoManager\Facades;
-
+namespace Krasov\SeoManager\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * Class SeoManager
+ *
+ * @package Krasov\SeoManager\Facades
+ */
 class SeoManager extends Facade
 {
-    public static function getFacadeAccessor()
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public static function getFacadeAccessor(): string
     {
         return 'seomanager';
     }

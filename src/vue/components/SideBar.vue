@@ -10,7 +10,7 @@
 
             <!-- Brand -->
             <a class="navbar-brand" href="/seo-manager">
-                <img src="vendor/lionix/img/logo.png" class="navbar-brand-img
+                <img src="vendor/dkrasov/img/logo.png" class="navbar-brand-img
             mx-auto" alt="...">
             </a>
         </div>

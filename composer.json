@@ -1,7 +1,7 @@
 {
     "name": "dkrasov/seo-manager",
     "description": "SEO Manager for Laravel Framework",
-    "keywords": ["laravel", "seo", "seo-manager", "lionix", "meta", "meta-data", "open-graph", "og-data"],
+    "keywords": ["laravel", "seo", "seo-manager", "meta", "meta-data", "open-graph", "og-data"],
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -28,9 +28,12 @@
             "src/helpers/helpers.php"
         ]
     },
-    "minimum-stability": "dev",
     "require": {
-        "php": "^7.0",
-        "illuminate/support": "5.5.* || 5.6.* || 5.7.* || 5.8.* || 6.0.*"
+        "php": "^7.1",
+        "illuminate/support": "5.5.* || 5.6.* || 5.7.* || 5.8.* || 6.0.*",
+        "illuminate/console": "^6.0",
+        "illuminate/http": "^6.0",
+        "illuminate/view": "^6.0",
+        "illuminate/database": "^6.0"
     }
 }

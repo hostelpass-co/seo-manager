@@ -1,28 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sergeykarakhanyan
- * Date: 10/30/18
- * Time: 12:00
- */
+declare(strict_types = 1);
 
-namespace Lionix\SeoManager\Traits;
+namespace Krasov\SeoManager\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
-use Lionix\SeoManager\Models\SeoManager;
+use Krasov\SeoManager\Models\SeoManager;
 use Illuminate\Support\Facades\Schema;
+use function in_array;
+use function str_replace;
 
+/**
+ * Trait SeoManagerTrait
+ *
+ * @package Krasov\SeoManager\Traits
+ */
 trait SeoManagerTrait
 {
     protected $exceptRoutes = [
         'api',
         'telescope',
-        '_debugbar'
+        '_debugbar',
     ];
 
     protected $exceptColumns = [
-        "password",
-        "remember_token",
+        'password',
+        'remember_token',
     ];
 
     public function __construct()
@@ -34,6 +37,7 @@ trait SeoManagerTrait
     /**
      * Detect Parameters from the URI
      * @param $uri
+     *
      * @return mixed
      */
     private function getParamsFromURI($uri)
@@ -46,58 +50,68 @@ trait SeoManagerTrait
     /**
      * Check if the given data is URI param
      * @param $param
+     *
      * @return bool
      */
-    private function isParam($param)
+    private function isParam($param): bool
     {
         $pattern_params = '/{(.*?)}/';
         preg_match_all($pattern_params, $param, $output_params);
+
         if (!empty($output_params[1])) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Check if the given data is Title
      * @param $param
+     *
      * @return bool
      */
-    private function isTitle($param)
+    private function isTitle($param): bool
     {
         $pattern_title = '/~(.*?)~/';
         preg_match_all($pattern_title, $param, $pattern_title);
+
         if (!empty($pattern_title[1])) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Remove unnecessary characters from param
      * @param $param
+     *
      * @return string
      */
-    private function cleanParam($param)
+    private function cleanParam($param): string
     {
         return strtolower(str_replace(['{', '}'], '', $param));
     }
 
     /**
      * Remove routes which shouldn't be imported to Seo Manager
+     *
      * @return array
      */
-    private function cleanRoutes()
+    private function cleanRoutes(): array
     {
         $routes = \Route::getRoutes();
         $getRoutes = array_keys($routes->get('GET'));
+
         foreach ($getRoutes as $key => $route) {
             foreach ($this->exceptRoutes as $rule) {
-                if (strpos($route, $rule) !== FALSE) {
+                if (strpos($route, $rule) !== false) {
                     unset($getRoutes[$key]);
                 }
             }
         }
+
         return $getRoutes;
     }
 
@@ -105,66 +119,79 @@ trait SeoManagerTrait
      * @return array
      * @throws \ReflectionException
      */
-    private function getAllModels()
+    private function getAllModels(): array
     {
         $path = base_path('app') . '/' . config('seo-manager.models_path');
 
         $models = File::allFiles($path);
         $cleanModelNames = [];
+
         foreach ($models as $model) {
             $modelPath = $this->cleanFilePath($model);
-            $reflectionClass =(new \ReflectionClass($modelPath))->getParentClass();
-            if($reflectionClass !== false){
-                if($reflectionClass->getName() === "Illuminate\Database\Eloquent\Model" || $reflectionClass->getName() === "Illuminate\Foundation\Auth\User"){
-                    $cleanModel = [
-                        'path' => $modelPath,
-                        'name' => str_replace('.php', '', $model->getFilename())
-                    ];
-                    array_push($cleanModelNames, $cleanModel);
-                }
+            $reflectionClass = (new \ReflectionClass($modelPath))->getParentClass();
+            if ($reflectionClass !== false &&
+                in_array($reflectionClass->getName(), [Model::class, "Illuminate\Foundation\Auth\User"], true)
+            ) {
+                $cleanModel = [
+                    'path' => $modelPath,
+                    'name' => str_replace('.php', '', $model->getFilename()),
+                ];
+
+                $cleanModelNames[] = $cleanModel;
             }
         }
+
         return $cleanModelNames;
     }
 
     /**
      * Get Model all Columns
+     *
      * @param $model
+     *
      * @return array
      */
-    public function getColumns($model)
+    public function getColumns($model): array
     {
         $appends = [];
-        if (method_exists((new $model), 'getAppends')) {
+
+        if (method_exists(new $model, 'getAppends')) {
             $appends = (new $model)->getAppends();
         }
+
         $table = (new $model)->getTable();
         $columns = $this->getCleanColumns(Schema::getColumnListing($table));
+
         return array_merge($columns, $appends);
     }
 
     /**
      * Clean model file path
+     *
      * @param $file
+     *
      * @return string
      */
-    private function cleanFilePath($file)
+    private function cleanFilePath($file): string
     {
         return '\\' . ucfirst(str_replace('/', '\\', substr($file, strpos($file, 'app'), -4)));
     }
 
     /**
      * Remove unnecessary columns from table columns list
+     *
      * @param $columns
+     *
      * @return array
      */
-    private function getCleanColumns($columns)
+    private function getCleanColumns($columns): array
     {
         return array_diff($columns, $this->exceptColumns);
     }
 
     /**
      * Import Routes to SeoManager database
+     *
      * @return array|\Illuminate\Database\Eloquent\Collection|static[]
      */
     private function importRoutes()
@@ -172,10 +199,10 @@ trait SeoManagerTrait
         $routes = $this->cleanRoutes();
         foreach ($routes as $uri) {
             $data = [
-                'uri' => $uri,
-                'params' => $this->getParamsFromURI($uri),
-                'keywords' => [],
-                'title_dynamic' => []
+                'uri'           => $uri,
+                'params'        => $this->getParamsFromURI($uri),
+                'keywords'      => [],
+                'title_dynamic' => [],
             ];
             if (!SeoManager::where('uri', $uri)->first()) {
                 $seoManager = new SeoManager();
@@ -185,12 +212,15 @@ trait SeoManagerTrait
         }
 
         $routes = SeoManager::all();
+
         return $routes;
     }
 
     /**
      * Get mapped Seo Data from Database for Current Route
+     *
      * @param $property
+     *
      * @return mixed
      */
     private function getMetaData($property)
@@ -198,62 +228,71 @@ trait SeoManagerTrait
         $route = \Route::current();
         $uri = $route->uri();
         $seoManager = SeoManager::where('uri', $uri)->first();
-        if(is_null($seoManager)){
+        if ($seoManager === null) {
             return null;
         }
+
         $metaData = [];
-        if(count($seoManager->keywords) > 0){
+
+        if (count($seoManager->keywords) > 0) {
             $metaData['keywords'] = implode(', ', $seoManager->keywords);
         }
-        if($seoManager->description){
+
+        if ($seoManager->description) {
             $metaData['description'] = $seoManager->description;
         }
-        if($seoManager->title){
+
+        if ($seoManager->title) {
             $metaData['title'] = $seoManager->title;
         }
-        if($seoManager->url){
+
+        if ($seoManager->url) {
             $metaData['url'] = $seoManager->url;
-        }else{
+        } else {
             $metaData['url'] = url()->full();
         }
-        if($seoManager->author){
+
+        if ($seoManager->author) {
             $metaData['author'] = $seoManager->author;
         }
+
         if ($seoManager->mapping !== null) {
-            $metaData['title_dynamic'] = $this->getDynamicTitle($seoManager->title_dynamic, $seoManager, $route->parameters);
+            $metaData['title_dynamic'] = $this->getDynamicTitle($seoManager->title_dynamic, $seoManager,
+                $route->parameters);
         }
+
         if ($seoManager->og_data) {
             $ogData = $this->getOgData($seoManager, $route->parameters);
-            if($property === 'og_data'){
+
+            if ($property === 'og_data') {
                 $metaData['og_data'] = $ogData;
-            }else{
+            } else {
                 foreach ($ogData as $key => $og) {
                     $metaData[$key] = $og;
                 }
             }
         }
 
-        if($property !== null && !empty($property)){
-            if(isset($metaData[$property])){
-                return $metaData[$property];
-            }else{
-                return null;
-            }
+        if ($property !== null && !empty($property)) {
+            return $metaData[$property] ?? null;
         }
+
         return $metaData;
     }
 
     /**
      * Get dynamic title based on user configs for current route
+     *
      * @param $params
      * @param $manager
      * @param $routeParams
+     *
      * @return string
      */
-    private function getDynamicTitle($params, $manager, $routeParams = null)
+    private function getDynamicTitle($params, $manager, $routeParams = null): string
     {
         $dynamicTitle = '';
-        if(is_array($params)){
+        if (is_array($params)) {
             foreach ($params as $param) {
                 if ($this->isParam($param)) {
                     $param = $this->cleanParam($param);
@@ -262,8 +301,8 @@ trait SeoManagerTrait
                     $model = $mapping['model']['path'];
                     $findBy = $mapping['find_by'];
                     $selectedColumns = $mapping['selectedColumns'];
-                    if (in_array($paramsArray[1], $selectedColumns)) {
-                        $mappedTitle = (new $model);
+                    if (in_array($paramsArray[1], $selectedColumns, true)) {
+                        $mappedTitle = new $model;
                         if ($routeParams) {
                             $mappedTitle = $mappedTitle->where($findBy, $routeParams[$paramsArray[0]])->first();
                         } else {
@@ -280,19 +319,23 @@ trait SeoManagerTrait
                 }
             }
         }
+
         return $dynamicTitle;
     }
 
     /**
      * Get Open Graph Dynamic Data
+     *
      * @param $seoManager
      * @param $routeParams
+     *
      * @return array
      */
-    private function getOgData($seoManager, $routeParams)
+    private function getOgData($seoManager, $routeParams): array
     {
         $dataArray = [];
         $value = '';
+
         foreach ($seoManager->og_data as $key => $og) {
             if (is_array(reset($og['data']))) {
                 foreach ($og['data'] as $ogKey => $data) {
@@ -318,14 +361,17 @@ trait SeoManagerTrait
                 }
             }
         }
+
         return $dataArray;
     }
 
     /**
      * Get Open Graph Data Values based on Mapped Params
+     *
      * @param $value
      * @param $manager
      * @param $routeParams
+     *
      * @return mixed
      */
     private function getMappedValue($value, $manager, $routeParams)
@@ -336,14 +382,15 @@ trait SeoManagerTrait
         $findBy = $mapping['find_by'];
         $selectedColumns = $mapping['selectedColumns'];
         $mapped = null;
-        if (in_array($paramsArray[1], $selectedColumns)) {
-            $mapped = (new $model);
+        if (in_array($paramsArray[1], $selectedColumns, true)) {
+            $mapped = new $model;
             if ($routeParams) {
                 $mapped = $mapped->where($findBy, $routeParams[$paramsArray[0]])->first();
-            }else{
+            } else {
                 $mapped = $mapped->first();
             }
         }
+
         return optional($mapped)->{$paramsArray[1]};
     }
 }

@@ -1,6 +1,7 @@
 <?php
+declare(strict_types = 1);
 
-use Lionix\SeoManager\Facades\SeoManager;
+use Krasov\SeoManager\Facades\SeoManager;
 
 if (!function_exists('metaData')) {
     function metaData($property = null)

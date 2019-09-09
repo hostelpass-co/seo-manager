@@ -1,13 +1,20 @@
 <?php
+declare(strict_types = 1);
 
-namespace Lionix\SeoManager\Commands;
+namespace Krasov\SeoManager\Commands;
 
 use Illuminate\Console\Command;
-use Lionix\SeoManager\Traits\SeoManagerTrait;
+use Krasov\SeoManager\Traits\SeoManagerTrait;
 
+/**
+ * Class GenerateSeoManagerData
+ *
+ * @package Krasov\SeoManager\Commands
+ */
 class GenerateSeoManagerData extends Command
 {
     use SeoManagerTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -23,21 +30,11 @@ class GenerateSeoManagerData extends Command
     protected $description = 'Fill Seo Manager database table with routes data';
 
     /**
-     * Create a new command instance.
+     * Execute the console command.
      *
      * @return void
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
+    public function handle(): void
     {
         $this->info('Import Started');
         $this->importRoutes();

@@ -1,10 +1,11 @@
 <?php
+declare(strict_types = 1);
 
 Route::group([
     'middleware' => config('seo-manager.middleware'),
     'prefix' => config('seo-manager.route'),
     'as' => 'seo-manager.',
-    'namespace' => 'Lionix\SeoManager'
+    'namespace' => 'Krasov\SeoManager'
 ], function () {
     Route::get('/', 'ManagerController@index')->name('home');
     Route::get('get-routes', 'ManagerController@getRoutes')->name('get-routes');

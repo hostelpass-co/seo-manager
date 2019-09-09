@@ -1,22 +1,24 @@
 <?php
+declare(strict_types = 1);
+
+namespace Krasov\SeoManager;
+
+use Krasov\SeoManager\Traits\SeoManagerTrait;
+
 /**
- * Created by PhpStorm.
- * User: sergeykarakhanyan
- * Date: 12/23/18
- * Time: 13:51
+ * Class SeoManager
+ *
+ * @package Lionix\SeoManager
  */
-
-namespace Lionix\SeoManager;
-
-use Lionix\SeoManager\Traits\SeoManagerTrait;
-
 class SeoManager
 {
     use SeoManagerTrait;
 
     /**
      * Get the array of the Seo meta data
+     *
      * @param $property
+     *
      * @return mixed
      */
     public function metaData($property = null)
@@ -26,6 +28,7 @@ class SeoManager
 
     /**
      * Get Meta Keywords formatted
+     *
      * @return mixed
      */
     public function metaKeywords()
@@ -35,26 +38,27 @@ class SeoManager
 
     /**
      * Get Title
+     *
      * @return mixed
      */
     public function metaTitle()
     {
         return $this->getMetaData('title');
-
     }
 
     /**
      * Get URL
+     *
      * @return mixed
      */
     public function metaUrl()
     {
         return $this->getMetaData('url');
-
     }
 
     /**
      * Get Meta Author
+     *
      * @return mixed
      */
     public function metaAuthor()
@@ -64,6 +68,7 @@ class SeoManager
 
     /**
      * Get Meta Description
+     *
      * @return mixed
      */
     public function metaDescription()
@@ -73,6 +78,7 @@ class SeoManager
 
     /**
      * Get dynamically generated title based on users mapping
+     *
      * @return mixed
      */
     public function metaTitleDynamic()
@@ -82,15 +88,18 @@ class SeoManager
 
     /**
      * Get Open Graph Data
+     *
      * @param $property
+     *
      * @return mixed
      */
     public function metaOpenGraph($property = null)
     {
         $og_data = $this->getMetaData('og_data');
-        if (!is_null($property) && isset($og_data[$property])) {
+        if ($property !== null && isset($og_data[$property])) {
             return $og_data[$property];
         }
+
         return $this->getMetaData('og_data');
     }
 }

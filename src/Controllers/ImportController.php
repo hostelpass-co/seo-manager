@@ -1,21 +1,28 @@
 <?php
+declare(strict_types = 1);
 
-namespace Lionix\SeoManager;
+namespace Krasov\SeoManager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Artisan;
-use Lionix\SeoManager\Traits\SeoManagerTrait;
+use Illuminate\Http\JsonResponse;
+use Krasov\SeoManager\Traits\SeoManagerTrait;
 
+/**
+ * Class ImportController
+ *
+ * @package Krasov\SeoManager
+ */
 class ImportController extends Controller
 {
     use SeoManagerTrait;
 
     /**
      * Import routes to the SeoManager database table
+     *
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function __invoke()
+    public function __invoke(): JsonResponse
     {
         try {
             $routes = $this->importRoutes();

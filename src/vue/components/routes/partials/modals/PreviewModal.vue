@@ -27,7 +27,7 @@
                         <div class="card fb" v-if="activeTab === 'fb' && loaded">
                             <div class="image" :class="{'no-image': !ogData['og:image:url']}">
                                 <img v-if="ogData['og:image:url']" :src="ogData['og:image:url']" alt="">
-                                <img class="default-image" v-else src="vendor/lionix/img/nophoto.png" alt="">
+                                <img class="default-image" v-else src="vendor/dkrasov/img/nophoto.png" alt="">
                             </div>
                             <div class="info" :class="{'no-image': !ogData['og:image:url']}">
                                 <p class="site_name" v-if="ogData['og:site_name']">{{ ogData['og:site_name'] }}</p>

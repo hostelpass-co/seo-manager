@@ -1,9 +1,6 @@
 # Seo Manager Package for Laravel ( with Localization )
 
-[![MadeWithLaravel.com shield](https://madewithlaravel.com/storage/repo-shields/1138-shield.svg)](https://madewithlaravel.com/p/seo-manager/shield-link)
-[![](https://img.shields.io/scrutinizer/build/g/filp/whoops.svg)](https://scrutinizer-ci.com/g/lionix-team/seo-manager/)
-
-`lionix/seo-manager` package will provide 
+`dkrasov/seo-manager` package will provide 
 you an interface from where you can manage all your pages
 metadata separately and get dynamically changing content.
 Let's see how.
@@ -11,10 +8,10 @@ Let's see how.
 # Update:
 After updating to version > v1.2.* you have to run:
 ```bash
-php artisan vendor:publish --provider="Lionix\SeoManager\SeoManagerServiceProvider" --tag=config --force
+php artisan vendor:publish --provider="Krasov\SeoManager\SeoManagerServiceProvider" --tag=config --force
 ```
 ```bash
-php artisan vendor:publish --provider="Lionix\SeoManager\SeoManagerServiceProvider" --tag=assets --force
+php artisan vendor:publish --provider="Krasov\SeoManager\SeoManagerServiceProvider" --tag=assets --force
 ```
 and
 ```bash
@@ -49,7 +46,7 @@ Publishing package files
 php artisan vendor:publish --provider="Lionix\SeoManager\SeoManagerServiceProvider"
 ```
 This command will create `config/seo-manager.php` 
-file and will copy package assets directory to `public/vendor/lionix`.
+file and will copy package assets directory to `public/vendor/dkrasov`.
 
 #### Configurations
 
@@ -148,10 +145,6 @@ To get dynamically changing metadata you should map your route params to the cor
 *Find By: Database table column name which you are using to get the record by route param*
 
 *Use Columns: Database table columns which we should use for further mapping*
-
-
-> **Note**: If you have appended attributes inside your model via `protected $appends` and you want to use them in mapping
-you have to use `Lionix\SeoManager\Traits\Appends;` trait inside your model.
 
 *Mapping available only if your route has params*
 
@@ -327,12 +320,3 @@ and pass param there like `@openGraph('og:url)`
 `@openGraph`
 
 `@titleDynamic` - will return dynamically generated title which you can use inside your `<title></title>` tags.
-
-
-
-## Credits
-
-- [Sergey Karakhanyan](https://github.com/karakhanyans)
-- [Lionix Team](https://github.com/lionix-team)
-
-

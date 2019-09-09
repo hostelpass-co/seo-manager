@@ -1,9 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateTranslatesTable
+ */
 class CreateTranslatesTable extends Migration
 {
     /**
@@ -11,9 +15,9 @@ class CreateTranslatesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(config('seo-manager.database.translates_table'), function (Blueprint $table) {
+        Schema::create(config('seo-manager.database.translates_table'), static function (Blueprint $table): void {
             $table->increments('id');
             $table->integer('route_id');
             $table->string('locale');
@@ -33,7 +37,7 @@ class CreateTranslatesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists(config('seo-manager.database.translates_table'));
     }
