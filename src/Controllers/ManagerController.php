@@ -26,8 +26,8 @@ class ManagerController extends Controller
 
     public function __construct()
     {
-        if (Request::input('locale')) {
-            app()->setLocale(Request::input('locale'));
+        if (\Request::input('locale')) {
+            app()->setLocale(\Request::input('locale'));
             $this->locale = app()->getLocale();
         }
     }

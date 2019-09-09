@@ -39,7 +39,7 @@ Easy, isn't it?
 You can install the package via composer:
 
 ```bash
-composer require lionix/seo-manager
+composer require dkrasov/seo-manager
 ```
 Publishing package files
 ```bash
