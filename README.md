@@ -43,7 +43,7 @@ composer require lionix/seo-manager
 ```
 Publishing package files
 ```bash
-php artisan vendor:publish --provider="Lionix\SeoManager\SeoManagerServiceProvider"
+php artisan vendor:publish --provider="Krasov\SeoManager\SeoManagerServiceProvider"
 ```
 This command will create `config/seo-manager.php` 
 file and will copy package assets directory to `public/vendor/dkrasov`.
@@ -168,7 +168,7 @@ Here you can write your open graph data or map your fields to mapping based on p
 ## Via `SeoManager` Facade
 
 ```php
-use Lionix\SeoManager\Facades\SeoManager;
+use Krasov\SeoManager\Facades\SeoManager;
 ```
 ##### This will return an array with all your SEO Manager data
 ```
