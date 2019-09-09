@@ -30,6 +30,16 @@ class GenerateSeoManagerData extends Command
     protected $description = 'Fill Seo Manager database table with routes data';
 
     /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * Execute the console command.
      *
      * @return void
