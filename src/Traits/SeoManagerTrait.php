@@ -127,7 +127,7 @@ trait SeoManagerTrait
         $cleanModelNames = [];
 
         foreach ($models as $model) {
-            $modelPath = $this->cleanFilePath($model);
+            $modelPath = $this->cleanFilePath($model->getPathname());
             $reflectionClass = (new \ReflectionClass($modelPath))->getParentClass();
             if ($reflectionClass !== false &&
                 in_array($reflectionClass->getName(), [Model::class, "Illuminate\Foundation\Auth\User"], true)
