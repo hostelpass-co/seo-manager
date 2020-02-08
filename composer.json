@@ -1,5 +1,5 @@
 {
-    "name": "dkrasov/seo-manager",
+    "name": "hostelpass-co/seo-manager",
     "description": "SEO Manager for Laravel Framework",
     "keywords": ["laravel", "seo", "seo-manager", "meta", "meta-data", "open-graph", "og-data"],
     "type": "library",
