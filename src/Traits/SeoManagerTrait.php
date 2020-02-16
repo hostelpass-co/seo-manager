@@ -102,17 +102,23 @@ trait SeoManagerTrait
     private function cleanRoutes(): array
     {
         $routes = \Route::getRoutes();
-        $getRoutes = array_keys($routes->get('GET'));
 
-        foreach ($getRoutes as $key => $route) {
+        $getRoutes = $routes->get('GET');
+
+        $result = [];
+        foreach ($getRoutes as $route) {
+            $result[] = ($route->action['domain'] ?? '') . '/' . ltrim($route->uri, '/');
+        }
+
+        foreach ($result as $key => $route) {
             foreach ($this->exceptRoutes as $rule) {
                 if (strpos($route, $rule) !== false) {
-                    unset($getRoutes[$key]);
+                    unset($result[$key]);
                 }
             }
         }
 
-        return $getRoutes;
+        return $result;
     }
 
     /**
@@ -227,6 +233,11 @@ trait SeoManagerTrait
     {
         $route = \Route::current();
         $uri = $route->uri();
+
+        if (!empty($route->action['domain'])) {
+            $uri = $route->action['domain'] . '/' . ltrim($uri, '/');
+        }
+
         $seoManager = SeoManager::where('uri', $uri)->first();
         if ($seoManager === null) {
             return null;
@@ -304,10 +315,17 @@ trait SeoManagerTrait
                     if (in_array($paramsArray[1], $selectedColumns, true)) {
                         $mappedTitle = new $model;
                         if ($routeParams) {
-                            $mappedTitle = $mappedTitle->where($findBy, $routeParams[$paramsArray[0]])->first();
+                            $condition = $routeParams[$paramsArray[0]];
+
+                            if ($condition instanceof Model) {
+                                $condition = $condition->$findBy;
+                            }
+
+                            $mappedTitle = $mappedTitle->where($findBy, $condition)->first();
                         } else {
                             $mappedTitle = $mappedTitle->first();
                         }
+
                         if ($mappedTitle) {
                             $dynamicTitle .= optional($mappedTitle)->{$paramsArray[1]} . ' ';
                         }
